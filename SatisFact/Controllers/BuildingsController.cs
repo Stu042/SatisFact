@@ -1,20 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using SatisFact.Data;
 using SatisFact.Models;
 using SatisFact.Utilities;
@@ -22,11 +10,11 @@ using SatisFact.Utilities;
 
 namespace SatisFact.Controllers
 {
-    public class BuildingsController : Controller
+	public class BuildingsController : Controller
     {
         private readonly BuildingContext _context;
-        private readonly string[] AllowedContentTypes = { "image/png", "image/jpeg", "image/.jpg" };
-
+        private readonly string[] AllowedContentTypes = { "image/png", "image/jpeg", "image/jpg" };
+        private readonly string ServerPath = "wwwroot/imgs/Buildings/";
 
 
         public BuildingsController(BuildingContext context)
@@ -72,7 +60,7 @@ namespace SatisFact.Controllers
         {
             if (ModelState.IsValid)
             {
-                FileUpload fu = new FileUpload(image, "wwwroot/imgs/Buildings/", AllowedContentTypes);
+                FileUpload fu = new FileUpload(image, ServerPath, AllowedContentTypes);
                 if (fu.AbleToUpload())
                 {
                     fu.Upload();
@@ -109,29 +97,37 @@ namespace SatisFact.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,FileName")] Building building)
+        public async Task<IActionResult> Edit(int id, [Bind("Image")] IFormFile image, [Bind("Id,Title,ImageName")] Building building)
         {
             if (id != building.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
-                try
+                FileUpload fu = new FileUpload(image, ServerPath, AllowedContentTypes);
+                if (fu.AbleToUpload())
                 {
-                    _context.Update(building);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BuildingExists(building.Id))
+                    if (fu.Upload())
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        System.IO.File.Delete(ServerPath + building.ImageName);
+                        building.ImageName = fu.ValidFilename;
+                        try
+                        {
+                            _context.Update(building);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!BuildingExists(building.Id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
                     }
                 }
                 return RedirectToAction(nameof(Index));
@@ -164,6 +160,7 @@ namespace SatisFact.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var building = await _context.Building.FindAsync(id);
+            System.IO.File.Delete(ServerPath + building.ImageName);
             _context.Building.Remove(building);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
