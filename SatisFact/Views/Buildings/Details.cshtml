@@ -1,0 +1,31 @@
+﻿@model SatisFact.Models.Building
+
+@{
+    ViewData["Title"] = "Building Details";
+}
+
+<h1>Building Details</h1>
+
+<div>
+    <h4>Building</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageName)
+        </dt>
+        <dd class = "col-sm-10">
+            <img src="/imgs/Buildings/@Model.ImageName" alt="@Html.DisplayTextFor(model => model.ImageName)"
+                 style="width:64px;height:64px;" data-toggle="tooltip" data-placement="top" title="@Html.DisplayTextFor(model => model.ImageName)" />
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
