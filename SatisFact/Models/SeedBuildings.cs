@@ -13,7 +13,7 @@ namespace SatisFact.Models
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-			using var context = new BuildingContext(serviceProvider.GetRequiredService<DbContextOptions<BuildingContext>>());
+			using var context = new SatisFactContext(serviceProvider.GetRequiredService<DbContextOptions<SatisFactContext>>());
 			// Look for any movies.
 			if (context.Building.Any())
 			{

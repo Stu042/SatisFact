@@ -29,7 +29,7 @@ namespace SatisFact
 		public void ConfigureServices(IServiceCollection services)
 		{
 			services.AddControllersWithViews();
-			services.AddDbContext<BuildingContext>(options => options.UseSqlServer(Configuration.GetConnectionString("BuildingContext")));
+			services.AddDbContext<SatisFactContext>(options => options.UseSqlServer(Configuration.GetConnectionString("SatisFactContext")));
 		}
 
 
@@ -59,6 +59,9 @@ namespace SatisFact
 					name: "default",
 					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
+			// setup app's root folders
+			AppDomain.CurrentDomain.SetData("ContentRootPath", env.ContentRootPath);
+			AppDomain.CurrentDomain.SetData("WebRootPath", env.WebRootPath);
 		}
 	}
 }

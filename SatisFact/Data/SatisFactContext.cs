@@ -6,14 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using SatisFact.Models;
 
 
-namespace SatisFact.Data
-{
-	public class BuildingContext : DbContext
-	{
-		public BuildingContext(DbContextOptions<BuildingContext> options) : base(options)
-		{
+namespace SatisFact.Data {
+	public class SatisFactContext : DbContext {
+		public SatisFactContext(DbContextOptions<SatisFactContext> options) : base(options) {
 		}
 
 		public DbSet<Building> Building { get; set; }
+		public DbSet<Ingredient> Ingredient { get; set; }
 	}
 }

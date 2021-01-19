@@ -20,6 +20,7 @@ namespace SatisFact
 				try
 				{
 					SeedBuildings.Initialize(services);
+					SeedIngredients.Initialize(services);
 				}
 				catch (Exception ex)
 				{

@@ -1,15 +1,14 @@
-﻿@model SatisFact.Models.Building
+﻿@model SatisFact.Models.Ingredient
 
 @{
-    ViewData["Title"] = "Edit Building";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Edit Building</h1>
+<h1>Edit Ingredient</h1>
 <hr />
-
 <div class="row">
     <div class="col-md-4">
-        @using (Html.BeginForm("Edit", "Buildings", FormMethod.Post, new { enctype = "multipart/form-data" })) {
+        <form asp-action="Edit">
             @Html.HiddenFor(n => Model.ImageName)
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -19,17 +18,14 @@
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label">Image</label>
-                <input type="file" id="Image" name="Image" value="@Html.DisplayTextFor(model => model.ImageName)" class="form-control" />
+                <label asp-for="ImageName" class="control-label"></label>
+                <input asp-for="ImageName" class="form-control" />
+                <span asp-validation-for="ImageName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
-        }
-    </div>
-    <div class="col-md-4">
-        <img id="preview" src="/imgs/Buildings/@Model.ImageName" alt="@Html.DisplayTextFor(model => model.ImageName)"
-             style="width:64px;height:64px;" data-toggle="tooltip" data-placement="top" title="@Html.DisplayTextFor(model => model.ImageName)" />
+        </form>
     </div>
 </div>
 
